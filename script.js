@@ -3,12 +3,20 @@ const myLibrary = [
   new Book ("Le Seigneurs des Anneaux", "JRR Tolkien", 1000, true)
 ];
 
-function Book(title, author, numPages, isRead) {
-    this.title = title;
-    this.author = author;
-    this.numPages = numPages;
-    this.isRead = isRead;
+function Book(title, author, numPages, read) {
+  this.title = title;
+  this.author = author;
+  this.numPages = numPages;
+  this.read = read;
 }
+
+Book.prototype.readStatus = function() {
+  return this.read ? 'read' : 'not read yet';
+};
+
+Book.prototype.toggleReadStatus = function() {
+  this.read = !this.read;
+};
 
 const title = document.querySelector("#title");
 const author = document.querySelector("#author");
@@ -32,10 +40,11 @@ function displayLibrary() {
   bookCardContainer.innerHTML = '';
   
   for (const book of myLibrary) {
-    console.log(book.title, book.author, book.numPages, book.isRead);
     
     const bookCardContainer = document.querySelector('.card-container')
-    
+
+    const cardDisplay = document.createElement("div");
+    cardDisplay.classList.add('card');
     const paraTitle = document.createElement("h4");
     const paraAuthor = document.createElement("p");
     const paraNumPages = document.createElement("p");
@@ -46,10 +55,12 @@ function displayLibrary() {
     paraNumPages.textContent = "Pages: ";
     paraRead.textContent = "Read: ";
     
-    bookCardContainer.appendChild(paraTitle);
-    bookCardContainer.appendChild(paraAuthor);
-    bookCardContainer.appendChild(paraNumPages);
-    bookCardContainer.appendChild(paraRead);
+    cardDisplay.appendChild(paraTitle);
+    cardDisplay.appendChild(paraAuthor);
+    cardDisplay.appendChild(paraNumPages);
+    cardDisplay.appendChild(paraRead);
+
+    bookCardContainer.appendChild(cardDisplay);
 
     const bookTitle = document.createTextNode(book.title);
     paraTitle.appendChild(bookTitle);
@@ -60,9 +71,46 @@ function displayLibrary() {
     const bookPages = document.createTextNode(book.numPages);
     paraNumPages.appendChild(bookPages);
 
-    const bookRead = document.createTextNode(book.isRead);
+    const bookRead = document.createTextNode(book.read);
     paraRead.appendChild(bookRead);
   }
+  
+  removeBook();
+  changeStatus();
 }
+
+function removeBook() {
+  const bookContainers = document.querySelectorAll(".card"); 
+  
+  bookContainers.forEach((bookContainer) => {
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = "X";
+    bookContainer.appendChild(deleteButton);
+
+    deleteButton.addEventListener('click', () => {
+      const index = bookContainer.getAttribute('data-index');
+      myLibrary.splice(index, 1); 
+      displayLibrary();
+    });
+  });
+}
+
+function changeStatus() {
+  const bookContainers = document.querySelectorAll(".card"); 
+  
+  bookContainers.forEach((bookContainer, index) => {
+    const readStatusButton = document.createElement('button');
+    
+    readStatusButton.textContent = myLibrary[index].readStatus();
+    
+    bookContainer.appendChild(readStatusButton);
+
+    readStatusButton.addEventListener ('click', () => {
+      myLibrary[index].toggleReadStatus();
+      readStatusButton.textContent = myLibrary[index].readStatus();
+    });
+
+  });
+};
 
 displayLibrary();
