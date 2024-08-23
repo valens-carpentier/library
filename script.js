@@ -11,7 +11,7 @@ function Book(title, author, numPages, read) {
 }
 
 Book.prototype.readStatus = function() {
-  return this.read ? 'read' : 'not read yet';
+  return this.read ? 'Read' : 'To Read';
 };
 
 Book.prototype.toggleReadStatus = function() {
@@ -39,78 +39,66 @@ function displayLibrary() {
   const bookCardContainer = document.querySelector('.card-container');
   bookCardContainer.innerHTML = '';
   
-  for (const book of myLibrary) {
+  myLibrary.forEach((book, index) => {
     
     const bookCardContainer = document.querySelector('.card-container')
 
     const cardDisplay = document.createElement("div");
     cardDisplay.classList.add('card');
+
     const paraTitle = document.createElement("h4");
     const paraAuthor = document.createElement("p");
     const paraNumPages = document.createElement("p");
-    const paraRead = document.createElement("p");
 
-    paraTitle.textContent = "Title: ";
-    paraAuthor.textContent = "Author: ";
-    paraNumPages.textContent = "Pages: ";
-    paraRead.textContent = "Read: ";
+    paraTitle.textContent = "Title: " + book.title;
+    paraAuthor.textContent = "Author: " + book.author;
+    paraNumPages.textContent = "Pages: " + book.numPages;
     
     cardDisplay.appendChild(paraTitle);
     cardDisplay.appendChild(paraAuthor);
     cardDisplay.appendChild(paraNumPages);
-    cardDisplay.appendChild(paraRead);
 
-    bookCardContainer.appendChild(cardDisplay);
-
-    const bookTitle = document.createTextNode(book.title);
-    paraTitle.appendChild(bookTitle);
-    
-    const bookAuthor = document.createTextNode(book.author);
-    paraAuthor.appendChild(bookAuthor);
-
-    const bookPages = document.createTextNode(book.numPages);
-    paraNumPages.appendChild(bookPages);
-
-    const bookRead = document.createTextNode(book.read);
-    paraRead.appendChild(bookRead);
-  }
-  
-  removeBook();
-  changeStatus();
-}
-
-function removeBook() {
-  const bookContainers = document.querySelectorAll(".card"); 
-  
-  bookContainers.forEach((bookContainer) => {
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = "X";
-    bookContainer.appendChild(deleteButton);
-
-    deleteButton.addEventListener('click', () => {
-      const index = bookContainer.getAttribute('data-index');
-      myLibrary.splice(index, 1); 
+    const readStatusButton = document.createElement('button');
+    readStatusButton.textContent = book.readStatus();
+    readStatusButton.addEventListener('click', () => {
+      book.toggleReadStatus();
       displayLibrary();
     });
+    cardDisplay.appendChild(readStatusButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = "X";
+    deleteButton.addEventListener('click', () => {
+      myLibrary.splice(index, 1);
+      displayLibrary();
+    });
+    cardDisplay.appendChild(deleteButton);
+
+    bookCardContainer.appendChild(cardDisplay);
   });
 }
 
-function changeStatus() {
-  const bookContainers = document.querySelectorAll(".card"); 
-  
-  bookContainers.forEach((bookContainer, index) => {
-    const readStatusButton = document.createElement('button');
-    
-    readStatusButton.textContent = myLibrary[index].readStatus();
-    
-    bookContainer.appendChild(readStatusButton);
-
-    readStatusButton.addEventListener ('click', () => {
-      myLibrary[index].toggleReadStatus();
-      readStatusButton.textContent = myLibrary[index].readStatus();
-    });
-
-  });
-};
-
 displayLibrary();
+
+const modal = document.querySelector(".modal");
+const btn = document.querySelector("#openModalBtn");
+const span = document.querySelector(".close");
+const submit = document.querySelector("input[type='submit']");
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+submit.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}

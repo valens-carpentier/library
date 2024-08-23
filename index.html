@@ -5,20 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <form id="form">
-        <h2>Add new book</h2>
-        <input id="title" type="text" placeholder="Harry Potter" required>
-        <input id="author" type="text" placeholder="JK Rowling" required>
-        <input id="numPages" type="number" placeholder="346" required>
-        <label for="isRead">Have you read it?</label>
-        <input id="isRead" type="checkbox" class="checkbox">
-        <input class="submit" type="submit">
-
-        <div class="card-container">
+    <header>
+        <h1>great<strong>reads</strong></h1>
+        <button id="openModalBtn">New Book</button>
+    </header>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <form id="form">
+                <input id="title" type="text" placeholder="Harry Potter">
+                <input id="author" type="text" placeholder="JK Rowling" >
+                <input id="numPages" type="number" placeholder="346">
+                <div>
+                    <label for="isRead">Have you read it?</label>
+                    <input id="isRead" type="checkbox" class="checkbox">
+                </div>
+                <input class="submit" type="submit">
+            </form>
+            <span class="close">&times;</span>
         </div>
-    </form>
+    </div>  
+
+    <div class="card-container">
+    </div>
 
     <script src="script.js"></script>
     
